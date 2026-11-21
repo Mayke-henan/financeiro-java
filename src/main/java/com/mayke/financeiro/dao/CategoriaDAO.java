@@ -39,6 +39,25 @@ public class CategoriaDAO {
     return lista;
 }
 
+    public Categoria buscarPorId(int id) throws SQLException{
+        String sqlFiltro = "SELECT id, nome, tipo FROM categoria WHERE id = ?";
+        try (Connection con = ConexaoFactory.getConexao();
+            PreparedStatement ps = con.prepareStatement(sqlFiltro)) {
+
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Categoria c = new Categoria();
+                    c.setId(rs.getInt("id"));
+                    c.setNome(rs.getString("nome"));
+                    c.setTipo(TipoCategoria.valueOf(rs.getString("tipo")));
+                    return c;
+    }
+}
+}
+        return null;
+    }
+
 
 
     

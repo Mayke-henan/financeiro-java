@@ -17,9 +17,8 @@ public class App
     {
 CategoriaDAO dao = new CategoriaDAO();
 try {
-    for (Categoria c : dao.listar()) {
-        System.out.println(c);
-    }
+    System.out.println(dao.buscarPorId(1));
+    System.out.println(dao.buscarPorId(999));
 } catch (Exception e) {
     System.out.println("Erro: " + e.getMessage());
 }
