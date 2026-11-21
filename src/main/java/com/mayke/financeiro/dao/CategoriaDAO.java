@@ -59,7 +59,17 @@ public class CategoriaDAO {
     }
 
 
+    public void deletar(int id) throws SQLException{
 
+        String sql = "DELETE FROM categoria WHERE id = ?";
+        try (Connection con = ConexaoFactory.getConexao();
+     PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setInt(1, id);
+        ps.executeUpdate();
+
+    }
     
     
+    }
+
 }
