@@ -72,4 +72,16 @@ public class CategoriaDAO {
     
     }
 
-}
+    public void atualizar(Categoria categoria)throws SQLException{
+        String sql = "UPDATE categoria SET nome = ?, tipo = ? WHERE id = ?";
+        try (Connection con = ConexaoFactory.getConexao();
+     PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, categoria.getNome());
+        ps.setString(2, categoria.getTipo().name());
+        ps.setInt(3, categoria.getId());
+        ps.executeUpdate();
+        }
+ 
+    }
+}   
+

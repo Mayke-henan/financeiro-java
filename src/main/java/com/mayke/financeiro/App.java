@@ -17,10 +17,10 @@ public class App
     {
 CategoriaDAO dao = new CategoriaDAO();
 try {
-    dao.deletar(2);
-    for (Categoria c : dao.listar()) {
-        System.out.println(c);
-    }
+    Categoria c = dao.buscarPorId(1);
+    c.setNome("Mercado");
+    dao.atualizar(c);
+    System.out.println(dao.buscarPorId(1));
 } catch (Exception e) {
     System.out.println("Erro: " + e.getMessage());
 }
