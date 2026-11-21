@@ -17,10 +17,11 @@ public class App
     {
 CategoriaDAO dao = new CategoriaDAO();
 try {
-    dao.inserir(new Categoria("Alimentacao", TipoCategoria.NECESSIDADE));
-    System.out.println("Inserido!");
+    for (Categoria c : dao.listar()) {
+        System.out.println(c);
+    }
 } catch (Exception e) {
     System.out.println("Erro: " + e.getMessage());
-}   
+}
     }
 }

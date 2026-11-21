@@ -2,10 +2,14 @@ package com.mayke.financeiro.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.mayke.financeiro.config.ConexaoFactory;
 import com.mayke.financeiro.model.Categoria;
+import com.mayke.financeiro.model.TipoCategoria;
 
 public class CategoriaDAO {
 
@@ -17,9 +21,26 @@ public class CategoriaDAO {
         ps.setString(2, categoria.getTipo().name());
         ps.executeUpdate();
 }
-
-
-
     }
+    public List<Categoria> listar() throws SQLException {
+    List<Categoria> lista = new ArrayList<>();
+    String sql = "SELECT id, nome, tipo FROM categoria";
+    try (Connection con = ConexaoFactory.getConexao();
+     PreparedStatement ps = con.prepareStatement(sql);
+     ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+            Categoria c = new Categoria();
+            c.setId(rs.getInt("id"));
+            c.setNome(rs.getString("nome"));
+            c.setTipo(TipoCategoria.valueOf(rs.getString("tipo")));
+            lista.add(c);
+        }
+}
+    return lista;
+}
+
+
+
+    
     
 }
