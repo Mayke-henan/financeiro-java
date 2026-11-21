@@ -6,9 +6,10 @@ public class Categoria {
     private String nome;
     private TipoCategoria tipo;
 
-    public Categoria(){}
+    public Categoria() {
+    }
 
-    public Categoria(String nome, TipoCategoria tipo){
+    public Categoria(String nome, TipoCategoria tipo) {
         this.nome = nome;
         this.tipo = tipo;
     }
@@ -37,7 +38,6 @@ public class Categoria {
         this.tipo = tipo;
     }
 
-    
     @Override
     public String toString() {
         return (id + " - " + nome + " (" + tipo + ")");
