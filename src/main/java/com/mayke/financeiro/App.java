@@ -3,6 +3,7 @@ package com.mayke.financeiro;
 import java.sql.Connection;
 
 import com.mayke.financeiro.config.ConexaoFactory;
+import com.mayke.financeiro.dao.CategoriaDAO;
 import com.mayke.financeiro.model.Categoria;
 import com.mayke.financeiro.model.TipoCategoria;
 
@@ -14,7 +15,12 @@ public class App
 {
     public static void main( String[] args )
     {
-     Categoria c = new Categoria("Alimentacao", TipoCategoria.NECESSIDADE);
-System.out.println(c);
+CategoriaDAO dao = new CategoriaDAO();
+try {
+    dao.inserir(new Categoria("Alimentacao", TipoCategoria.NECESSIDADE));
+    System.out.println("Inserido!");
+} catch (Exception e) {
+    System.out.println("Erro: " + e.getMessage());
+}   
     }
 }
