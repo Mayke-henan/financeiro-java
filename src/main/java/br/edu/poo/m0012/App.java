@@ -22,8 +22,16 @@ public class App {
 
         DespesaDAO dao = new DespesaDAO();
         try {
+            Despesa d = dao.buscarPorId(1);
+            d.setDescricao("Jantar");
+            d.setValor(new BigDecimal("40.50"));
+            dao.atualizar(d);
             System.out.println(dao.buscarPorId(1));
-            System.out.println(dao.buscarPorId(999));
+
+            dao.deletar(2);
+            for (Despesa x : dao.listar()) {
+                System.out.println(x);
+            }
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
         }

@@ -68,4 +68,26 @@ public class DespesaDAO {
         return null;
     }
 
+    public void deletar(int id) throws SQLException {
+        String sql = "DELETE FROM despesa WHERE id = ?";
+        try (Connection con = ConexaoFactory.getConexao();
+                PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        }
+    }
+
+    public void atualizar(Despesa despesa) throws SQLException {
+        String sql = "UPDATE despesa SET descricao = ?, valor = ?, data_despesa = ?, categoria_id = ? WHERE id = ?";
+        try (Connection con = ConexaoFactory.getConexao();
+                PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, despesa.getDescricao());
+            ps.setBigDecimal(2, despesa.getValor());
+            ps.setDate(3, java.sql.Date.valueOf(despesa.getData()));
+            ps.setInt(4, despesa.getCategoriaId());
+            ps.setInt(5, despesa.getId());
+            ps.executeUpdate();
+        }
+    }
 }
