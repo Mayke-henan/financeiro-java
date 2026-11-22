@@ -43,7 +43,7 @@ public class Menu {
                     break;
 
                 case "3":
-
+                    atualizarCategoria();
                     break;
 
                 case "4":
@@ -115,4 +115,57 @@ public class Menu {
         }
     }
 
+       private void atualizarCategoria() {
+        String texto = JOptionPane.showInputDialog("Id da categoria a atualizar:");
+        if (texto == null) {
+            return;
+        }
+        try {
+            int id = Integer.parseInt(texto.trim());
+            Categoria c = dao.buscarPorId(id);
+            if (c == null) {
+                JOptionPane.showMessageDialog(null, "Categoria não encontrada");
+                return;
+            }
+
+            String nome = JOptionPane.showInputDialog("Novo nome:", c.getNome());
+            if (nome == null || nome.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Nome inválido");
+                return;
+            }
+
+            TipoCategoria tipo = pedirTipo();
+            if (tipo == null) {
+                return;
+            }
+
+            c.setNome(nome.trim());
+            c.setTipo(tipo);
+            dao.atualizar(c);
+            JOptionPane.showMessageDialog(null, "Categoria atualizada!");
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Digite um número válido");
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao acessar o banco: " + e.getMessage());
+        }
+    }
+
+    private TipoCategoria pedirTipo() {
+        String opcaoTipo = JOptionPane.showInputDialog(
+                "Tipo:\n1 - Necessidade\n2 - Desejo\n3 - Poupança");
+        if (opcaoTipo == null) {
+            return null;
+        }
+        switch (opcaoTipo) {
+            case "1":
+                return TipoCategoria.NECESSIDADE;
+            case "2":
+                return TipoCategoria.DESEJO;
+            case "3":
+                return TipoCategoria.POUPANCA;
+            default:
+                JOptionPane.showMessageDialog(null, "Tipo inválido");
+                return null;
+        }
+    }
 }
