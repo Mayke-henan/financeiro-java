@@ -46,4 +46,26 @@ public class DespesaDAO {
         return lista;
     }
 
+    public Despesa buscarPorId(int id) throws SQLException {
+        String sql = "SELECT id, descricao, valor, data_despesa, categoria_id FROM despesa WHERE id = ?";
+        try (Connection con = ConexaoFactory.getConexao();
+                PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Despesa d = new Despesa();
+                    d.setId(rs.getInt("id"));
+                    d.setDescricao(rs.getString("descricao"));
+                    d.setValor(rs.getBigDecimal("valor"));
+                    d.setData(rs.getDate("data_despesa").toLocalDate());
+                    d.setCategoriaId(rs.getInt("categoria_id"));
+                    return d;
+                }
+            }
+        }
+        return null;
+    }
+
 }

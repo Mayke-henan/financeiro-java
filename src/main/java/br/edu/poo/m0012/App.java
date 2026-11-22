@@ -22,9 +22,8 @@ public class App {
 
         DespesaDAO dao = new DespesaDAO();
         try {
-            for (Despesa d : dao.listar()) {
-                System.out.println(d);
-            }
+            System.out.println(dao.buscarPorId(1));
+            System.out.println(dao.buscarPorId(999));
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
         }
