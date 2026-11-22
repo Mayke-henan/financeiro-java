@@ -67,7 +67,7 @@ public class Despesa {
 
     @Override
     public String toString() {
-        return (id + " - " + descricao + " - " + "R$" + valor + " - " + data);
+        return id + " - " + descricao + " - " + "R$ " + valor + " - " + data.format(FORMATO_BR);
     }
 
 }
