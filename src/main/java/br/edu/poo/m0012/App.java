@@ -16,18 +16,17 @@ import br.edu.poo.m0012.view.Menu;
  * Hello world!
  *
  */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        //new Menu().iniciar();
+public class App {
+    public static void main(String[] args) {
+        // new Menu().iniciar();
 
         DespesaDAO dao = new DespesaDAO();
-try {
-    dao.inserir(new Despesa("Almoço", new BigDecimal("25.00"), LocalDate.of(2026, 11, 22), 1));
-    System.out.println("Inserido!");
-} catch (Exception e) {
-    System.out.println("Erro: " + e.getMessage());
-}
+        try {
+            for (Despesa d : dao.listar()) {
+                System.out.println(d);
+            }
+        } catch (Exception e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
     }
 }

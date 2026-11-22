@@ -2,7 +2,10 @@ package br.edu.poo.m0012.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import br.edu.poo.m0012.config.ConexaoFactory;
 import br.edu.poo.m0012.model.Despesa;
@@ -22,6 +25,25 @@ public class DespesaDAO {
             ps.executeUpdate();
 
         }
-
     }
+
+    public List<Despesa> listar() throws SQLException {
+        List<Despesa> lista = new ArrayList<>();
+        String sql = "SELECT id, descricao, valor, data_despesa, categoria_id FROM despesa";
+        try (Connection con = ConexaoFactory.getConexao();
+                PreparedStatement ps = con.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Despesa d = new Despesa();
+                d.setId(rs.getInt("id"));
+                d.setDescricao(rs.getString("descricao"));
+                d.setValor(rs.getBigDecimal("valor"));
+                d.setData(rs.getDate("data_despesa").toLocalDate());
+                d.setCategoriaId(rs.getInt("categoria_id"));
+                lista.add(d);
+            }
+        }
+        return lista;
+    }
+
 }
