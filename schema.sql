@@ -1,5 +1,15 @@
+CREATE DATABASE IF NOT EXISTS financeiro;
+USE financeiro;
 CREATE TABLE IF NOT EXISTS categoria (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(50) NOT NULL,
     tipo ENUM('NECESSIDADE', 'DESEJO', 'POUPANCA') NOT NULL
+);
+CREATE TABLE IF NOT EXISTS despesa (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    descricao VARCHAR(100) NOT NULL,
+    valor DECIMAL(10,2) NOT NULL,
+    data_despesa DATE NOT NULL,
+    categoria_id INT NOT NULL,
+    FOREIGN KEY (categoria_id) REFERENCES categoria(id)
 );
