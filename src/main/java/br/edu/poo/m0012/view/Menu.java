@@ -1,13 +1,13 @@
-package com.mayke.financeiro.view;
+package br.edu.poo.m0012.view;
 
 import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import com.mayke.financeiro.dao.CategoriaDAO;
-import com.mayke.financeiro.model.Categoria;
-import com.mayke.financeiro.model.TipoCategoria;
+import br.edu.poo.m0012.dao.CategoriaDAO;
+import br.edu.poo.m0012.model.Categoria;
+import br.edu.poo.m0012.model.TipoCategoria;
 
 public class Menu {
 

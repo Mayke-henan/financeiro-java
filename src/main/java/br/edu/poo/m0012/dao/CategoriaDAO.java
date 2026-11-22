@@ -1,4 +1,4 @@
-package com.mayke.financeiro.dao;
+package br.edu.poo.m0012.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,9 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mayke.financeiro.config.ConexaoFactory;
-import com.mayke.financeiro.model.Categoria;
-import com.mayke.financeiro.model.TipoCategoria;
+import br.edu.poo.m0012.config.ConexaoFactory;
+import br.edu.poo.m0012.model.Categoria;
+import br.edu.poo.m0012.model.TipoCategoria;
 
 public class CategoriaDAO {
 

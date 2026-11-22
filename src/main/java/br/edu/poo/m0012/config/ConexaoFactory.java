@@ -1,4 +1,4 @@
-package com.mayke.financeiro.config;
+package br.edu.poo.m0012.config;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

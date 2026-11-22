@@ -1,4 +1,4 @@
-package com.mayke.financeiro;
+package br.edu.poo.m0012;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
