@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 
 import com.mayke.financeiro.dao.CategoriaDAO;
 import com.mayke.financeiro.model.Categoria;
+import com.mayke.financeiro.model.TipoCategoria;
 
 public class Menu {
 
@@ -15,8 +16,7 @@ public class Menu {
     public void iniciar() {
         while (true) {
             String opcao = JOptionPane.showInputDialog(
-                    "=== CATEGORIAS ===\n1 - Listar\n0 - Sair");
-
+                    "=== CATEGORIAS ===\n1 - Listar\n2 - Inserir\n3 - atualizar\n4 - deletar\n0 - Sair");
             if (opcao == null || opcao.equals("0")) {
                 break;
             }
@@ -38,9 +38,81 @@ public class Menu {
                         JOptionPane.showMessageDialog(null, "Erro ao acessar o banco: " + e.getMessage());
                     }
                     break;
+                case "2":
+                    inserirCategoria();
+                    break;
+
+                case "3":
+
+                    break;
+
+                case "4":
+                    deletarCategoria();
+                    break;
                 default:
                     JOptionPane.showMessageDialog(null, "Opção inválida");
             }
         }
     }
+
+    private void inserirCategoria() {
+        String nome = JOptionPane.showInputDialog("Nome da categoria:");
+        if (nome == null || nome.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Nome inválido");
+            return;
+        }
+        nome = nome.trim();
+        String opcaoTipo = JOptionPane.showInputDialog(
+                "Tipo:\n1 - Necessidade\n2 - Desejo\n3 - Poupança");
+        if (opcaoTipo == null) {
+            return;
+        }
+        TipoCategoria tipo;
+        switch (opcaoTipo) {
+            case "1":
+                tipo = TipoCategoria.NECESSIDADE;
+                break;
+            case "2":
+                tipo = TipoCategoria.DESEJO;
+                break;
+            case "3":
+                tipo = TipoCategoria.POUPANCA;
+                break;
+            default:
+                JOptionPane.showMessageDialog(null, "Tipo inválido");
+                return;
+        }
+        try {
+            dao.inserir(new Categoria(nome, tipo));
+            JOptionPane.showMessageDialog(null, "Categoria cadastrada!");
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao acessar o banco: " + e.getMessage());
+        }
+    }
+
+    private void deletarCategoria() {
+        String texto = JOptionPane.showInputDialog("Id da categoria a deletar:");
+        if (texto == null) {
+            return;
+        }
+        try {
+            int id = Integer.parseInt(texto.trim());
+            Categoria c = dao.buscarPorId(id);
+            if (c == null) {
+                JOptionPane.showMessageDialog(null, "Categoria não encontrada");
+                return;
+            }
+            int confirma = JOptionPane.showConfirmDialog(null,
+                    "Deletar " + c + "?", "Confirmar", JOptionPane.YES_NO_OPTION);
+            if (confirma == JOptionPane.YES_OPTION) {
+                dao.deletar(id);
+                JOptionPane.showMessageDialog(null, "Categoria deletada!");
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Digite um número válido");
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao acessar o banco: " + e.getMessage());
+        }
+    }
+
 }
