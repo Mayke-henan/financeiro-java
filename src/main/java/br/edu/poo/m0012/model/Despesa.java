@@ -14,7 +14,10 @@ public class Despesa {
     public static final DateTimeFormatter FORMATO_BR = DateTimeFormatter.ofPattern("dd/MM/uuuu")
             .withResolverStyle(ResolverStyle.STRICT);
 
-    public Despesa() {
+        public Despesa() {
+        }
+
+    public Despesa(String nome, Categoria tipo) {
     }
 
     public Despesa(String descricao, BigDecimal valor, LocalDate data, int categoriaId) {
