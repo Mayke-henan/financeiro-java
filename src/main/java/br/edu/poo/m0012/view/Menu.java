@@ -19,7 +19,7 @@ public class Menu {
                     new MenuCategoria().iniciar();
                     break;
                 case "2":
-                    // new MenuDespesa().iniciar();  (descomente quando criar)
+                    new MenuDespesa().iniciar();
                     break;
                 default:
                     JOptionPane.showMessageDialog(null, "Opção inválida");
