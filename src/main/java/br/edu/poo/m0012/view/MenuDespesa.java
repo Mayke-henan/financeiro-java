@@ -1,5 +1,6 @@
 package br.edu.poo.m0012.view;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
@@ -15,24 +16,25 @@ import br.edu.poo.m0012.dao.CategoriaDAO;
 import br.edu.poo.m0012.dao.DespesaDAO;
 import br.edu.poo.m0012.model.Categoria;
 import br.edu.poo.m0012.model.Despesa;
+import br.edu.poo.m0012.service.CotacaoService;
 
 public class MenuDespesa {
 
     private final DespesaDAO dao = new DespesaDAO();
 
-    private static final DateTimeFormatter FORMATO_ENTRADA =
-            DateTimeFormatter.ofPattern("dd/MM/uuuu")
-                    .withResolverStyle(ResolverStyle.STRICT);
+    private static final DateTimeFormatter FORMATO_ENTRADA = DateTimeFormatter.ofPattern("dd/MM/uuuu")
+            .withResolverStyle(ResolverStyle.STRICT);
 
     public void iniciar() {
         while (true) {
             String opcao = JOptionPane.showInputDialog(
                     "=== DESPESAS ===\n"
-                    + "1 - Listar\n"
-                    + "2 - Inserir\n"
-                    + "3 - Atualizar\n"
-                    + "4 - Deletar\n"
-                    + "0 - Voltar");
+                            + "1 - Listar\n"
+                            + "2 - Inserir\n"
+                            + "3 - Atualizar\n"
+                            + "4 - Deletar\n"
+                            + "5 - Ver despesa em dólar\n"
+                            + "0 - Voltar");
 
             if (opcao == null || opcao.equals("0")) {
                 break;
@@ -50,6 +52,9 @@ public class MenuDespesa {
                     break;
                 case "4":
                     deletarDespesa();
+                    break;
+                case "5":
+                    verDespesaEmDolar();
                     break;
                 default:
                     JOptionPane.showMessageDialog(null, "Opção inválida");
@@ -215,8 +220,7 @@ public class MenuDespesa {
 
     private String pedirDescricao() {
         while (true) {
-            String descricao =
-                    JOptionPane.showInputDialog("Descrição da despesa:");
+            String descricao = JOptionPane.showInputDialog("Descrição da despesa:");
 
             if (descricao == null) {
                 return null;
@@ -321,6 +325,26 @@ public class MenuDespesa {
             JOptionPane.showMessageDialog(
                     null, "Erro ao consultar categorias: " + e.getMessage());
             return null;
+        }
+    }
+
+    private void verDespesaEmDolar() {
+        Despesa despesa = selecionarDespesa();
+        if (despesa == null) {
+            return;
+        }
+        try {
+            BigDecimal cotacao = new CotacaoService().buscarCotacaoDolar();
+            BigDecimal emDolar = despesa.getValor().divide(cotacao, 2, RoundingMode.HALF_UP);
+            JOptionPane.showMessageDialog(null,
+                    despesa + "\n\nCotação do dólar: R$ " + cotacao
+                            + "\nValor em dólar: US$ " + emDolar);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null,
+                    "Não foi possível consultar a cotação. Verifique a internet.\n" + e.getMessage());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            JOptionPane.showMessageDialog(null, "Consulta interrompida");
         }
     }
 }
