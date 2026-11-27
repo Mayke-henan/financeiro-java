@@ -8,12 +8,24 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 public class ConexaoFactory {
 
+    private static Dotenv carregar() {
+        return Dotenv.configure().ignoreIfMissing().load();
+    }
+
+    public static String getUrl() {
+        return carregar().get("DB_URL", "jdbc:mysql://localhost:3306/financeiro");
+    }
+
+    public static String getUsuario() {
+        return carregar().get("DB_USER", "root");
+    }
+
+    public static String getSenha() {
+        return carregar().get("DB_PASSWORD", "");
+    }
+
     public static Connection getConexao() throws SQLException {
-        Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
-        String url = dotenv.get("DB_URL", "jdbc:mysql://localhost:3306/financeiro");
-        String user = dotenv.get("DB_USER", "root");
-        String password = dotenv.get("DB_PASSWORD", "");
-        return DriverManager.getConnection(url, user, password);
+        return DriverManager.getConnection(getUrl(), getUsuario(), getSenha());
     }
 
 }
