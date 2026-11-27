@@ -29,7 +29,7 @@ pessoais por categoria. Projeto do **Desafio Extra – CRUD com Integração**.
 ## Requisitos
 
 - JDK 21
-- Maven 3.x
+- Maven 3.x (dispensável se você rodar pelo IntelliJ, que já traz o Maven)
 - MySQL 8 ou MariaDB em execução, por padrão em `localhost:3306`
 - Usuário `root` **sem senha** (configuração padrão do projeto; veja
   [Problemas comuns](#problemas-comuns) se o seu `root` tiver senha)
@@ -37,6 +37,11 @@ pessoais por categoria. Projeto do **Desafio Extra – CRUD com Integração**.
 - Ambiente gráfico (o programa abre janelas)
 
 ## Como executar
+
+Funciona em **Linux, macOS e Windows**. Os passos são os mesmos; só mudam o
+comando para rodar o `schema.sql` no Windows (PowerShell) e o jeito de executar
+o programa. A forma mais simples, em qualquer sistema, é abrir o projeto no
+**IntelliJ IDEA** (veja o passo 4).
 
 1. **Clone o repositório e entre na pasta:**
 
@@ -46,22 +51,49 @@ pessoais por categoria. Projeto do **Desafio Extra – CRUD com Integração**.
    ```
 
 2. **Crie o banco e as tabelas** com o `schema.sql`. O script cria o banco
-   `financeiro` e usa o usuário `root` sem senha:
+   `financeiro` e usa o usuário `root` sem senha.
+
+   **Linux e macOS (Terminal):**
 
    ```bash
    mysql -u root < schema.sql
    ```
 
-   No MariaDB mais recente o comando `mysql` foi renomeado para `mariadb`; se
-   aparecer um aviso de "Deprecated program name", é só isso, e o comando
-   funciona normalmente (ou use `mariadb -u root < schema.sql`).
+   **Windows (PowerShell):** o PowerShell não aceita o `<`, então use um destes:
 
-3. **Crie o arquivo `.env`:** o `.env.example` já vem pronto, configurado para o
-   `root` sem senha. Basta copiar:
+   ```powershell
+   cmd /c "mysql -u root < schema.sql"
+   ```
+
+   ```powershell
+   Get-Content schema.sql | mysql -u root
+   ```
+
+   Se o terminal disser que `mysql` não é reconhecido, abra o `schema.sql` no
+   **MySQL Workbench** (ou em outra ferramenta do seu banco) e execute o script
+   inteiro por lá.
+
+   **Se o seu `root` tem senha** (comum quando o MySQL é instalado pelo
+   instalador oficial no Windows ou no macOS), acrescente `-p`, digite a senha
+   quando pedir e coloque a mesma senha em `DB_PASSWORD` no `.env` (passo 3):
+
+   ```bash
+   mysql -u root -p < schema.sql
+   ```
+
+   No macOS, o MySQL instalado com Homebrew (`brew install mysql` e
+   `brew services start mysql`) vem com o `root` sem senha.
+
+3. **Crie o arquivo `.env` (opcional):** o `.env.example` já vem pronto, com o
+   `root` sem senha. Se o arquivo `.env` não existir, o programa usa esses
+   mesmos valores por padrão. Copie para criar o seu:
 
    ```bash
    cp .env.example .env
    ```
+
+   No Windows, o mesmo comando funciona no PowerShell; no Prompt de Comando
+   (cmd) use `copy .env.example .env`.
 
    | Variável          | Descrição                                                  |
    |-------------------|------------------------------------------------------------|
@@ -73,14 +105,30 @@ pessoais por categoria. Projeto do **Desafio Extra – CRUD com Integração**.
    O arquivo `.env` não vai para o repositório (está no `.gitignore`). Só é
    preciso editá-lo se o seu banco usar outro usuário, senha ou porta.
 
-4. **Compile e execute:**
+4. **Execute o programa:**
+
+   **Pelo IntelliJ IDEA (recomendado, em Linux, macOS e Windows):**
+
+   1. Em **File → Open**, escolha a pasta `financeiro-java` (ou o arquivo
+      `pom.xml`) e clique em **Trust Project**.
+   2. Aguarde o Maven baixar as dependências (barra de progresso no canto
+      inferior direito).
+   3. Confira o JDK em **File → Project Structure → Project**: use o **21**. Se
+      não houver nenhum, escolha **Add SDK → Download JDK** e baixe o 21.
+   4. Abra `src/main/java/br/edu/poo/m0012/App.java` e clique na seta verde ao
+      lado do `main` → **Run 'App.main()'**.
+
+   Não é preciso ter o Maven instalado para rodar assim.
+
+   **Pelo terminal** (precisa do Maven 3.x e do JDK 21 no PATH):
 
    ```bash
    mvn compile exec:java -Dexec.mainClass="br.edu.poo.m0012.App"
    ```
 
-   Também é possível abrir o projeto em uma IDE (Eclipse, IntelliJ ou VS Code) e
-   executar a classe `br.edu.poo.m0012.App`.
+   No macOS, dá para instalar o Maven com `brew install maven`. Também funciona
+   em outras IDEs (Eclipse ou VS Code): abra o projeto e execute a classe
+   `br.edu.poo.m0012.App`.
 
 ## Como usar
 
@@ -184,7 +232,9 @@ src/main/java/br/edu/poo/m0012/
 | Mensagem | Causa e solução |
 |----------|-----------------|
 | `Communications link failure` | O MySQL/MariaDB não está em execução ou a porta do `DB_URL` está errada. |
-| `Access denied for user 'root'` | O `root` do seu banco tem senha ou usa autenticação por usuário do sistema (`unix_socket`). Para deixá-lo sem senha, rode `sudo mysql` e execute `ALTER USER 'root'@'localhost' IDENTIFIED BY ''; FLUSH PRIVILEGES;`. Se preferir manter a senha, coloque-a em `DB_PASSWORD` no `.env`. |
+| `Access denied for user 'root'` | O `root` do seu banco tem senha ou usa autenticação por usuário do sistema (`unix_socket`). Para deixá-lo sem senha, rode `sudo mysql` e execute `ALTER USER 'root'@'localhost' IDENTIFIED BY ''; FLUSH PRIVILEGES;`. Se preferir manter a senha (o instalador oficial do MySQL no Windows e no macOS costuma exigir uma), coloque-a em `DB_PASSWORD` no `.env` e use `-p` ao rodar o `schema.sql`. |
+| `Operador '<' reservado para uso futuro` (PowerShell) | O PowerShell não aceita `<`. Use `cmd /c "mysql -u root < schema.sql"` ou `Get-Content schema.sql \| mysql -u root`. |
+| `mvn` ou `mysql` não é reconhecido como comando | O programa não está instalado ou não está no PATH. Execute o projeto pelo IntelliJ (que traz o Maven) e rode o `schema.sql` pelo MySQL Workbench. |
 | `Unknown database 'financeiro'` | O `schema.sql` ainda não foi executado. |
 | `HeadlessException` | O programa precisa de ambiente gráfico para abrir as janelas. |
 | Erro ao consultar a cotação | Sem internet ou API indisponível; o restante do sistema continua funcionando. |
