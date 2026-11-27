@@ -5,8 +5,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
 
-public class Despesa {
-    private int id;
+public class Despesa extends EntidadeBase {
     private String descricao;
     private BigDecimal valor;
     private LocalDate data;
@@ -14,8 +13,8 @@ public class Despesa {
     public static final DateTimeFormatter FORMATO_BR = DateTimeFormatter.ofPattern("dd/MM/uuuu")
             .withResolverStyle(ResolverStyle.STRICT);
 
-        public Despesa() {
-        }
+    public Despesa() {
+    }
 
     public Despesa(String nome, Categoria tipo) {
     }
@@ -26,14 +25,6 @@ public class Despesa {
         this.valor = valor;
         this.data = data;
         this.categoriaId = categoriaId;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getDescricao() {
@@ -69,8 +60,8 @@ public class Despesa {
     }
 
     @Override
-    public String toString() {
-        return id + " - " + descricao + " - " + "R$ " + valor + " - " + data.format(FORMATO_BR);
+    public String getResumo() {
+        return descricao + " - R$ " + valor + " - " + data.format(FORMATO_BR);
     }
 
 }

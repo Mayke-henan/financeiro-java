@@ -102,7 +102,7 @@ public class MenuDespesa {
         Despesa despesa = new Despesa(descricao, valor, data, categoriaId);
 
         try {
-            dao.inserirDespesa(despesa);
+            dao.inserir(despesa);
             JOptionPane.showMessageDialog(null, "Despesa cadastrada!");
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(

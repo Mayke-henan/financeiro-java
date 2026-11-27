@@ -1,8 +1,7 @@
 package br.edu.poo.m0012.model;
 
-public class Categoria {
+public class Categoria extends EntidadeBase {
 
-    private int id;
     private String nome;
     private TipoCategoria tipo;
 
@@ -12,14 +11,6 @@ public class Categoria {
     public Categoria(String nome, TipoCategoria tipo) {
         this.nome = nome;
         this.tipo = tipo;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getNome() {
@@ -39,8 +30,7 @@ public class Categoria {
     }
 
     @Override
-    public String toString() {
-        return (id + " - " + nome + " (" + tipo + ")");
+    public String getResumo() {
+        return nome + " (" + tipo + ")";
     }
-
 }

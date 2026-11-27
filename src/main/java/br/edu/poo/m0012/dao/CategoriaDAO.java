@@ -11,7 +11,7 @@ import br.edu.poo.m0012.config.ConexaoFactory;
 import br.edu.poo.m0012.model.Categoria;
 import br.edu.poo.m0012.model.TipoCategoria;
 
-public class CategoriaDAO {
+public class CategoriaDAO implements Crud<Categoria> {
 
     public void inserir(Categoria categoria) throws SQLException {
         String sql = "INSERT INTO categoria (nome, tipo) VALUES (?, ?)";

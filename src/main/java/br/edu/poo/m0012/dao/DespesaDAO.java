@@ -8,11 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.edu.poo.m0012.config.ConexaoFactory;
+import br.edu.poo.m0012.model.Categoria;
 import br.edu.poo.m0012.model.Despesa;
 
-public class DespesaDAO {
+public class DespesaDAO implements Crud<Despesa>{
 
-    public void inserirDespesa(Despesa despesa) throws SQLException {
+    @Override 
+    public void inserir(Despesa despesa) throws SQLException {
 
         String sql = "INSERT INTO despesa (descricao, valor, data_despesa, categoria_id) VALUES (?, ?, ?, ?)";
         try (Connection con = ConexaoFactory.getConexao();
