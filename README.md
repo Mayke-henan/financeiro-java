@@ -20,7 +20,7 @@ pessoais por categoria. Projeto do **Desafio Extra – CRUD com Integração**.
 ## Tecnologias
 
 - Java 21 e Maven
-- MySQL (acesso por JDBC, com `mysql-connector-j`)
+- MySQL ou MariaDB (acesso por JDBC, com `mysql-connector-j`)
 - `dotenv-java` para ler o arquivo `.env`
 - `Gson` para ler o JSON da API
 - `HttpClient` (`java.net.http`) para consumir a API
@@ -30,7 +30,9 @@ pessoais por categoria. Projeto do **Desafio Extra – CRUD com Integração**.
 
 - JDK 21
 - Maven 3.x
-- MySQL 8 (ou compatível) em execução, por padrão em `localhost:3306`
+- MySQL 8 ou MariaDB em execução, por padrão em `localhost:3306`
+- Usuário `root` **sem senha** (configuração padrão do projeto; veja
+  [Problemas comuns](#problemas-comuns) se o seu `root` tiver senha)
 - Internet (somente para a opção de cotação do dólar)
 - Ambiente gráfico (o programa abre janelas)
 
@@ -43,28 +45,33 @@ pessoais por categoria. Projeto do **Desafio Extra – CRUD com Integração**.
    cd financeiro-java
    ```
 
-2. **Crie o banco e as tabelas** com o `schema.sql` (use uma conta do MySQL com
-   permissão para criar bancos, como o `root`):
+2. **Crie o banco e as tabelas** com o `schema.sql`. O script cria o banco
+   `financeiro` e usa o usuário `root` sem senha:
 
    ```bash
-   mysql -u root -p < schema.sql
+   mysql -u root < schema.sql
    ```
 
-3. **Configure o arquivo `.env`:** copie o exemplo e ajuste usuário e senha para
-   os do seu MySQL.
+   No MariaDB mais recente o comando `mysql` foi renomeado para `mariadb`; se
+   aparecer um aviso de "Deprecated program name", é só isso, e o comando
+   funciona normalmente (ou use `mariadb -u root < schema.sql`).
+
+3. **Crie o arquivo `.env`:** o `.env.example` já vem pronto, configurado para o
+   `root` sem senha. Basta copiar:
 
    ```bash
    cp .env.example .env
    ```
 
-   | Variável          | Descrição                                       |
-   |-------------------|-------------------------------------------------|
-   | `DB_URL`          | URL JDBC do banco (padrão: `localhost:3306`)    |
-   | `DB_USER`         | usuário do MySQL                                |
-   | `DB_PASSWORD`     | senha do MySQL                                  |
-   | `API_COTACAO_URL` | endereço da API de cotação do dólar             |
+   | Variável          | Descrição                                                  |
+   |-------------------|------------------------------------------------------------|
+   | `DB_URL`          | URL JDBC do banco (`jdbc:mysql://localhost:3306/financeiro`) |
+   | `DB_USER`         | usuário do banco (`root`)                                  |
+   | `DB_PASSWORD`     | senha do banco (vazia por padrão)                          |
+   | `API_COTACAO_URL` | endereço da API de cotação do dólar                        |
 
-   O arquivo `.env` não vai para o repositório (está no `.gitignore`).
+   O arquivo `.env` não vai para o repositório (está no `.gitignore`). Só é
+   preciso editá-lo se o seu banco usar outro usuário, senha ou porta.
 
 4. **Compile e execute:**
 
@@ -101,6 +108,14 @@ O arquivo `schema.sql` cria o banco `financeiro` e duas tabelas:
 - `categoria` (`id`, `nome`, `tipo`)
 - `despesa` (`id`, `descricao`, `valor`, `data_despesa`, `categoria_id`), em que
   `categoria_id` é chave estrangeira para `categoria(id)`
+
+O script usa `IF NOT EXISTS`, então pode ser executado mais de uma vez sem
+apagar dados. Para **recomeçar do zero**:
+
+```bash
+mysql -u root -e "DROP DATABASE IF EXISTS financeiro;"
+mysql -u root < schema.sql
+```
 
 A conexão é aberta em cada operação com `try-with-resources`, o que fecha
 `Connection`, `PreparedStatement` e `ResultSet` automaticamente.
@@ -168,8 +183,8 @@ src/main/java/br/edu/poo/m0012/
 
 | Mensagem | Causa e solução |
 |----------|-----------------|
-| `Communications link failure` | O MySQL não está em execução ou a porta do `DB_URL` está errada. |
-| `Access denied for user` | Usuário ou senha do `.env` não correspondem aos do seu MySQL. |
+| `Communications link failure` | O MySQL/MariaDB não está em execução ou a porta do `DB_URL` está errada. |
+| `Access denied for user 'root'` | O `root` do seu banco tem senha ou usa autenticação por usuário do sistema (`unix_socket`). Para deixá-lo sem senha, rode `sudo mysql` e execute `ALTER USER 'root'@'localhost' IDENTIFIED BY ''; FLUSH PRIVILEGES;`. Se preferir manter a senha, coloque-a em `DB_PASSWORD` no `.env`. |
 | `Unknown database 'financeiro'` | O `schema.sql` ainda não foi executado. |
 | `API_COTACAO_URL não encontrada no .env` | Falta copiar o `.env.example` para `.env`. |
 | `HeadlessException` | O programa precisa de ambiente gráfico para abrir as janelas. |
