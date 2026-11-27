@@ -186,7 +186,6 @@ src/main/java/br/edu/poo/m0012/
 | `Communications link failure` | O MySQL/MariaDB não está em execução ou a porta do `DB_URL` está errada. |
 | `Access denied for user 'root'` | O `root` do seu banco tem senha ou usa autenticação por usuário do sistema (`unix_socket`). Para deixá-lo sem senha, rode `sudo mysql` e execute `ALTER USER 'root'@'localhost' IDENTIFIED BY ''; FLUSH PRIVILEGES;`. Se preferir manter a senha, coloque-a em `DB_PASSWORD` no `.env`. |
 | `Unknown database 'financeiro'` | O `schema.sql` ainda não foi executado. |
-| `API_COTACAO_URL não encontrada no .env` | Falta copiar o `.env.example` para `.env`. |
 | `HeadlessException` | O programa precisa de ambiente gráfico para abrir as janelas. |
 | Erro ao consultar a cotação | Sem internet ou API indisponível; o restante do sistema continua funcionando. |
 | Erro ao deletar uma categoria | Ela tem despesas vinculadas. Apague ou mude a categoria dessas despesas antes. |
