@@ -61,27 +61,11 @@ public class MenuCategoria {
             JOptionPane.showMessageDialog(null, "Nome inválido");
             return;
         }
-        nome = nome.trim();
-        String opcaoTipo = JOptionPane.showInputDialog(
-                "Tipo:\n1 - Necessidade\n2 - Desejo\n3 - Poupança");
-        if (opcaoTipo == null) {
+        TipoCategoria tipo = pedirTipo();
+        if (tipo == null) {
             return;
         }
-        TipoCategoria tipo;
-        switch (opcaoTipo) {
-            case "1":
-                tipo = TipoCategoria.NECESSIDADE;
-                break;
-            case "2":
-                tipo = TipoCategoria.DESEJO;
-                break;
-            case "3":
-                tipo = TipoCategoria.POUPANCA;
-                break;
-            default:
-                JOptionPane.showMessageDialog(null, "Tipo inválido");
-                return;
-        }
+
         try {
             dao.inserir(new Categoria(nome, tipo));
             JOptionPane.showMessageDialog(null, "Categoria cadastrada!");
@@ -115,7 +99,7 @@ public class MenuCategoria {
         }
     }
 
-       private void atualizarCategoria() {
+    private void atualizarCategoria() {
         String texto = JOptionPane.showInputDialog("Id da categoria a atualizar:");
         if (texto == null) {
             return;
@@ -151,21 +135,28 @@ public class MenuCategoria {
     }
 
     private TipoCategoria pedirTipo() {
-        String opcaoTipo = JOptionPane.showInputDialog(
-                "Tipo:\n1 - Necessidade\n2 - Desejo\n3 - Poupança");
-        if (opcaoTipo == null) {
+        TipoCategoria[] tipos = TipoCategoria.values();
+
+        StringBuilder sb = new StringBuilder("Tipo:\n");
+        for (int i = 0; i < tipos.length; i++) {
+            sb.append(i + 1).append(" - ").append(tipos[i]).append("\n");
+        }
+
+        String texto = JOptionPane.showInputDialog(sb.toString());
+        if (texto == null) {
             return null;
         }
-        switch (opcaoTipo) {
-            case "1":
-                return TipoCategoria.NECESSIDADE;
-            case "2":
-                return TipoCategoria.DESEJO;
-            case "3":
-                return TipoCategoria.POUPANCA;
-            default:
-                JOptionPane.showMessageDialog(null, "Tipo inválido");
-                return null;
+
+        try {
+            int escolha = Integer.parseInt(texto.trim());
+            if (escolha >= 1 && escolha <= tipos.length) {
+                return tipos[escolha - 1];
+            }
+        } catch (NumberFormatException e) { // não é número: cai na mensagem de tipo inválido abaixo
+
         }
+
+        JOptionPane.showMessageDialog(null, "Tipo inválido");
+        return null;
     }
 }
