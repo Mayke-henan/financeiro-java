@@ -250,7 +250,7 @@ public class MenuDespesa {
                 continue;
             }
 
-            BigDecimal valor = new BigDecimal(normalizado);
+            BigDecimal valor = new BigDecimal(normalizado).setScale(2, RoundingMode.HALF_UP);
 
             if (valor.compareTo(BigDecimal.ZERO) <= 0) {
                 JOptionPane.showMessageDialog(null, "O valor deve ser maior que zero");
@@ -260,7 +260,7 @@ public class MenuDespesa {
                 JOptionPane.showMessageDialog(null, "Valor muito alto (máximo 99999999,99)");
                 continue;
             }
-            return valor.setScale(2, RoundingMode.HALF_UP);
+            return valor;
         }
     }
 
@@ -347,6 +347,8 @@ public class MenuDespesa {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             JOptionPane.showMessageDialog(null, "Consulta interrompida");
+        } catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao processar a cotação: " + e.getMessage());
         }
     }
 }

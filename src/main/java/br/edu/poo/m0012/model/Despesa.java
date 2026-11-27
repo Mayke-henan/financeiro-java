@@ -16,9 +16,6 @@ public class Despesa extends EntidadeBase {
     public Despesa() {
     }
 
-    public Despesa(String nome, Categoria tipo) {
-    }
-
     public Despesa(String descricao, BigDecimal valor, LocalDate data, int categoriaId) {
 
         this.descricao = descricao;

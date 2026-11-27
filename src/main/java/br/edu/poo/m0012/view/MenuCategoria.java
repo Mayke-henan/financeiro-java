@@ -1,6 +1,7 @@
 package br.edu.poo.m0012.view;
 
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -57,8 +58,12 @@ public class MenuCategoria {
 
     private void inserirCategoria() {
         String nome = JOptionPane.showInputDialog("Nome da categoria:");
-        if (nome == null || nome.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Nome inválido");
+        if (nome == null) {
+            return;
+        }
+        nome = nome.trim();
+        if (nome.isEmpty() || nome.length() > 50) {
+            JOptionPane.showMessageDialog(null, "Nome inválido (de 1 a 50 caracteres)");
             return;
         }
         TipoCategoria tipo = pedirTipo();
@@ -94,6 +99,9 @@ public class MenuCategoria {
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Digite um número válido");
+        } catch (SQLIntegrityConstraintViolationException e) {
+            JOptionPane.showMessageDialog(null,
+                    "Essa categoria tem despesas vinculadas. Apague ou mude essas despesas antes.");
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Erro ao acessar o banco: " + e.getMessage());
         }
@@ -113,8 +121,12 @@ public class MenuCategoria {
             }
 
             String nome = JOptionPane.showInputDialog("Novo nome:", c.getNome());
-            if (nome == null || nome.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Nome inválido");
+            if (nome == null) {
+                return;
+            }
+            nome = nome.trim();
+            if (nome.isEmpty() || nome.length() > 50) {
+                JOptionPane.showMessageDialog(null, "Nome inválido (de 1 a 50 caracteres)");
                 return;
             }
 
@@ -123,7 +135,7 @@ public class MenuCategoria {
                 return;
             }
 
-            c.setNome(nome.trim());
+            c.setNome(nome);
             c.setTipo(tipo);
             dao.atualizar(c);
             JOptionPane.showMessageDialog(null, "Categoria atualizada!");

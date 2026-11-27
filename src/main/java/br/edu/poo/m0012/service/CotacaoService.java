@@ -16,10 +16,8 @@ import io.github.cdimascio.dotenv.Dotenv;
 public class CotacaoService {
 
     public BigDecimal buscarCotacaoDolar() throws IOException, InterruptedException {
-        String url = Dotenv.load().get("API_COTACAO_URL");
-        if (url == null || url.isBlank()) {
-            throw new IllegalStateException("API_COTACAO_URL não encontrada no .env");
-        }
+        String url = Dotenv.configure().ignoreIfMissing().load()
+                .get("API_COTACAO_URL", "https://economia.awesomeapi.com.br/json/last/USD-BRL");
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
