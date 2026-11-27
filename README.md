@@ -50,8 +50,19 @@ o programa. A forma mais simples, em qualquer sistema, é abrir o projeto no
    cd financeiro-java
    ```
 
-2. **Crie o banco e as tabelas** com o `schema.sql`. O script cria o banco
-   `financeiro` e usa o usuário `root` sem senha.
+2. **Banco de dados:** basta deixar o MySQL ou o MariaDB em execução. Na
+   primeira execução, o programa **cria sozinho** o banco `financeiro` e as
+   tabelas `categoria` e `despesa`, usando o usuário do `.env` (por padrão,
+   `root` sem senha). Não é preciso rodar nenhum script.
+
+   **Se o seu `root` tem senha** (comum quando o MySQL é instalado pelo
+   instalador oficial no Windows ou no macOS), coloque a senha em
+   `DB_PASSWORD` no `.env` (passo 3). No macOS, o MySQL instalado com Homebrew
+   (`brew install mysql` e `brew services start mysql`) vem com o `root` sem
+   senha.
+
+   *Criação manual (opcional).* Se preferir, ou se o seu usuário não puder
+   criar bancos, rode o `schema.sql` com uma conta que tenha essa permissão:
 
    **Linux e macOS (Terminal):**
 
@@ -73,16 +84,11 @@ o programa. A forma mais simples, em qualquer sistema, é abrir o projeto no
    **MySQL Workbench** (ou em outra ferramenta do seu banco) e execute o script
    inteiro por lá.
 
-   **Se o seu `root` tem senha** (comum quando o MySQL é instalado pelo
-   instalador oficial no Windows ou no macOS), acrescente `-p`, digite a senha
-   quando pedir e coloque a mesma senha em `DB_PASSWORD` no `.env` (passo 3):
+   Com senha no `root`, acrescente `-p` e digite a senha quando pedir:
 
    ```bash
    mysql -u root -p < schema.sql
    ```
-
-   No macOS, o MySQL instalado com Homebrew (`brew install mysql` e
-   `brew services start mysql`) vem com o `root` sem senha.
 
 3. **Crie o arquivo `.env` (opcional):** o `.env.example` já vem pronto, com o
    `root` sem senha. Se o arquivo `.env` não existir, o programa usa esses
@@ -157,8 +163,10 @@ O arquivo `schema.sql` cria o banco `financeiro` e duas tabelas:
 - `despesa` (`id`, `descricao`, `valor`, `data_despesa`, `categoria_id`), em que
   `categoria_id` é chave estrangeira para `categoria(id)`
 
-O script usa `IF NOT EXISTS`, então pode ser executado mais de uma vez sem
-apagar dados. Para **recomeçar do zero**:
+O programa cria o banco e as tabelas sozinho ao iniciar (classe
+`BancoInicializador`), com o mesmo conteúdo do `schema.sql`. Os dois usam
+`IF NOT EXISTS`, então podem ser executados mais de uma vez sem apagar nem
+duplicar dados. Para **recomeçar do zero**:
 
 ```bash
 mysql -u root -e "DROP DATABASE IF EXISTS financeiro;"
@@ -174,7 +182,8 @@ A conexão é aberta em cada operação com `try-with-resources`, o que fecha
 src/main/java/br/edu/poo/m0012/
 ├── App.java                  # ponto de entrada
 ├── config/
-│   └── ConexaoFactory.java   # lê o .env e abre a conexão com o banco
+│   ├── ConexaoFactory.java   # lê o .env e abre a conexão com o banco
+│   └── BancoInicializador.java # cria o banco e as tabelas na primeira execução
 ├── dao/
 │   ├── Crud.java             # interface genérica com as 5 operações
 │   ├── CategoriaDAO.java
@@ -235,7 +244,7 @@ src/main/java/br/edu/poo/m0012/
 | `Access denied for user 'root'` | O `root` do seu banco tem senha ou usa autenticação por usuário do sistema (`unix_socket`). Para deixá-lo sem senha, rode `sudo mysql` e execute `ALTER USER 'root'@'localhost' IDENTIFIED BY ''; FLUSH PRIVILEGES;`. Se preferir manter a senha (o instalador oficial do MySQL no Windows e no macOS costuma exigir uma), coloque-a em `DB_PASSWORD` no `.env` e use `-p` ao rodar o `schema.sql`. |
 | `Operador '<' reservado para uso futuro` (PowerShell) | O PowerShell não aceita `<`. Use `cmd /c "mysql -u root < schema.sql"` ou `Get-Content schema.sql \| mysql -u root`. |
 | `mvn` ou `mysql` não é reconhecido como comando | O programa não está instalado ou não está no PATH. Execute o projeto pelo IntelliJ (que traz o Maven) e rode o `schema.sql` pelo MySQL Workbench. |
-| `Unknown database 'financeiro'` | O `schema.sql` ainda não foi executado. |
+| `Unknown database 'financeiro'` | O banco é criado automaticamente. Se o erro aparecer, o usuário do `.env` não tem permissão para criar bancos: rode o `schema.sql` com uma conta que tenha. |
 | `HeadlessException` | O programa precisa de ambiente gráfico para abrir as janelas. |
 | Erro ao consultar a cotação | Sem internet ou API indisponível; o restante do sistema continua funcionando. |
 | Erro ao deletar uma categoria | Ela tem despesas vinculadas. Apague ou mude a categoria dessas despesas antes. |
