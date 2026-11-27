@@ -227,12 +227,16 @@ public class MenuDespesa {
             }
 
             descricao = descricao.trim();
-            if (!descricao.isEmpty()) {
-                return descricao;
+            if (descricao.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Descrição não pode ser vazia");
+                continue;
             }
-
-            JOptionPane.showMessageDialog(null, "Descrição não pode ser vazia");
-        }
+            if (descricao.length() > 100) {
+                JOptionPane.showMessageDialog(null, "Descrição muito longa (máximo 100 caracteres)");
+                continue;
+            }
+            return descricao;
+        }   
     }
 
     private BigDecimal pedirValor() {
@@ -253,12 +257,15 @@ public class MenuDespesa {
 
             BigDecimal valor = new BigDecimal(normalizado);
 
-            if (valor.compareTo(BigDecimal.ZERO) > 0) {
-                return valor.setScale(2, RoundingMode.HALF_UP);
+            if (valor.compareTo(BigDecimal.ZERO) <= 0) {
+                JOptionPane.showMessageDialog(null, "O valor deve ser maior que zero");
+                continue;
             }
-
-            JOptionPane.showMessageDialog(
-                    null, "O valor deve ser maior que zero");
+            if (valor.compareTo(new BigDecimal("99999999.99")) > 0) {
+                JOptionPane.showMessageDialog(null, "Valor muito alto (máximo 99999999,99)");
+                continue;
+            }
+            return valor.setScale(2, RoundingMode.HALF_UP);
         }
     }
 
