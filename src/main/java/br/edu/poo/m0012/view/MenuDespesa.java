@@ -5,9 +5,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.format.ResolverStyle;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -21,9 +19,6 @@ import br.edu.poo.m0012.service.CotacaoService;
 public class MenuDespesa {
 
     private final DespesaDAO dao = new DespesaDAO();
-
-    private static final DateTimeFormatter FORMATO_ENTRADA = DateTimeFormatter.ofPattern("dd/MM/uuuu")
-            .withResolverStyle(ResolverStyle.STRICT);
 
     public void iniciar() {
         while (true) {
@@ -236,7 +231,7 @@ public class MenuDespesa {
                 continue;
             }
             return descricao;
-        }   
+        }
     }
 
     private BigDecimal pedirValor() {
@@ -279,7 +274,7 @@ public class MenuDespesa {
             }
 
             try {
-                return LocalDate.parse(texto.trim(), FORMATO_ENTRADA);
+                return LocalDate.parse(texto.trim(), Despesa.FORMATO_BR);
             } catch (DateTimeParseException e) {
                 JOptionPane.showMessageDialog(
                         null, "Data inválida. Use o formato dd/mm/aaaa");
