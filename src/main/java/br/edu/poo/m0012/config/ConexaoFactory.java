@@ -12,7 +12,7 @@ public class ConexaoFactory {
         Dotenv dotenv = Dotenv.load();
         String url = dotenv.get("DB_URL");
         String user = dotenv.get("DB_USER");
-        String password = dotenv.get("DB_PASSWORD");
+        String password = dotenv.get("DB_PASSWORD", "");
         return DriverManager.getConnection(url, user, password);
     }
 
