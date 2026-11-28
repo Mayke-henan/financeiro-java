@@ -115,8 +115,11 @@ o programa. A forma mais simples, em qualquer sistema, é abrir o projeto no
 
    **Pelo IntelliJ IDEA (recomendado, em Linux, macOS e Windows):**
 
-   1. Em **File → Open**, escolha a pasta `financeiro-java` (ou o arquivo
-      `pom.xml`) e clique em **Trust Project**.
+   1. Em **File → Open**, selecione o arquivo **`pom.xml`** (que está dentro
+      da pasta `financeiro-java`) e escolha **Open as Project**. Depois clique
+      em **Trust Project**. Abrir a própria pasta `financeiro-java` também
+      funciona, mas não abra uma pasta acima dela: o IntelliJ só reconhece o
+      Maven se o `pom.xml` estiver na raiz do projeto aberto.
    2. Aguarde o Maven baixar as dependências (barra de progresso no canto
       inferior direito).
    3. Confira o JDK em **File → Project Structure → Project**: use o **21**. Se
@@ -241,6 +244,7 @@ src/main/java/br/edu/poo/m0012/
 | Mensagem | Causa e solução |
 |----------|-----------------|
 | `Communications link failure` | O MySQL/MariaDB não está em execução ou a porta do `DB_URL` está errada. |
+| O IntelliJ não mostra o Maven ou a seta verde ao lado do `main` | Foi aberta a pasta errada (por exemplo, uma pasta acima de `financeiro-java`). Use **File → Open** e selecione diretamente o arquivo `pom.xml`. |
 | `Access denied for user 'root'` | O `root` do seu banco tem senha ou usa autenticação por usuário do sistema (`unix_socket`). Para deixá-lo sem senha, rode `sudo mysql` e execute `ALTER USER 'root'@'localhost' IDENTIFIED BY ''; FLUSH PRIVILEGES;`. Se preferir manter a senha (o instalador oficial do MySQL no Windows e no macOS costuma exigir uma), coloque-a em `DB_PASSWORD` no `.env` e use `-p` ao rodar o `schema.sql`. |
 | `Operador '<' reservado para uso futuro` (PowerShell) | O PowerShell não aceita `<`. Use `cmd /c "mysql -u root < schema.sql"` ou `Get-Content schema.sql \| mysql -u root`. |
 | `mvn` ou `mysql` não é reconhecido como comando | O programa não está instalado ou não está no PATH. Execute o projeto pelo IntelliJ (que traz o Maven) e rode o `schema.sql` pelo MySQL Workbench. |
